@@ -13,8 +13,9 @@ app.post("/register",Controller.register);
 app.post("/login",Controller.login);
 
 app.use(authentication)
-app.post("/addFavorite",Controller.addFavorite)
-app.delete("/deleteFavorite/:id",updateDelete,Controller.deleteFavorite)
+app.get("/favorites",Controller.getFavorite)
+app.post("/favorites",Controller.addFavorite)
+app.delete("/favorites/:id/delete",updateDelete,Controller.deleteFavorite)
 
 app.use(errorHandler)
 app.listen(port, () => {

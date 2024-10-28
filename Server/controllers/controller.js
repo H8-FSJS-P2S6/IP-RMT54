@@ -84,11 +84,48 @@ class Controller {
         });
       }
 
-      await Favorite.destroy({where:{id}})
+      await Favorite.destroy({ where: { id } });
 
       res.status(200).json(pokemonFav);
     } catch (error) {
-      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error)
+      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async deleteFavorite(req, res, next) {
+    const { id } = req.params;
+    try {
+      const pokemonFav = await Favorite.findByPk(id);
+      if (!pokemonFav) {
+        return next({
+          name: `NotFound`,
+          message: `Pokemon not found`,
+        });
+      }
+
+      await Favorite.destroy({ where: { id } });
+
+      res.status(200).json(pokemonFav);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async getFavorite(req, res, next) {
+    try {
+      const pokemonFav = await Favorite.findAll();
+      if (!pokemonFav) {
+        return next({
+          name: `NotFound`,
+          message: `Pokemon not found`,
+        });
+      }
+
+      res.status(200).json(pokemonFav);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error);
       next(error);
     }
   }
