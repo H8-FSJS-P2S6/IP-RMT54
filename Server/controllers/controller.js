@@ -1,5 +1,5 @@
 const { compareSync } = require("bcrypt");
-const { User,Favorite } = require("../models");
+const { User, Favorite } = require("../models");
 const { signToken } = require("../helpers/jwt");
 
 class Controller {
@@ -29,7 +29,7 @@ class Controller {
         return;
       }
 
-      const user = await User.findOne({ where:{email} });
+      const user = await User.findOne({ where: { email } });
 
       if (!user) {
         return next({
@@ -38,7 +38,7 @@ class Controller {
         });
       }
 
-      const isValid = compareSync(password,user.password)
+      const isValid = compareSync(password, user.password);
 
       if (!isValid) {
         return next({
@@ -49,23 +49,47 @@ class Controller {
 
       const access_token = signToken({ UserId: user.id });
 
-      return res.status(200).json({ access_token:access_token });
+      return res.status(200).json({ access_token: access_token });
     } catch (error) {
-      console.log("🚀 ~ Controller ~ login ~ error:", error)
+      console.log("🚀 ~ Controller ~ login ~ error:", error);
       next(error);
     }
   }
 
-  static async addFavorite(req,res,next){
-    const {PokemonId,funFact} = req.body
+  static async addFavorite(req, res, next) {
+    const { PokemonId, funFact } = req.body;
     try {
-        const {id} = req.user
-        const pokemonFav = await Favorite.create({PokemonId,UserId:id,funFact})
-        
-        res.status(201).json(pokemonFav)
+      const { id } = req.user;
+      const pokemonFav = await Favorite.create({
+        PokemonId,
+        UserId: id,
+        funFact,
+      });
+
+      res.status(201).json(pokemonFav);
     } catch (error) {
-        console.log("🚀 ~ Controller ~ addFavorite ~ error:", error)
-        next(error)
+      console.log("🚀 ~ Controller ~ addFavorite ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async deleteFavorite(req, res, next) {
+    const { id } = req.params;
+    try {
+      const pokemonFav = await Favorite.findByPk(id);
+      if (!pokemonFav) {
+        return next({
+          name: `NotFound`,
+          message: `Pokemon not found`,
+        });
+      }
+
+      await Favorite.destroy({where:{id}})
+
+      res.status(200).json(pokemonFav);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error)
+      next(error);
     }
   }
 }
