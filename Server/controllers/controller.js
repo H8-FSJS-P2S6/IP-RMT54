@@ -1,4 +1,6 @@
+const { compareSync } = require("bcrypt");
 const { User } = require("../models");
+const { signToken } = require("../helpers/jwt");
 
 class Controller {
   static async register(req, res, next) {
@@ -12,6 +14,44 @@ class Controller {
       res.status(201).json(userResponse);
     } catch (error) {
       console.log("🚀 ~ Controller ~ register ~ error:", error);
+      next(error);
+    }
+  }
+  static async login(req, res, next) {
+    const { email, password } = req.body;
+    try {
+      if (!email) {
+        next({ name: "BadReq", message: `Email is required` });
+        return;
+      }
+      if (!password) {
+        next({ name: "BadReq", message: `Password is required` });
+        return;
+      }
+
+      const user = await User.findOne({ where:{email} });
+
+      if (!user) {
+        return next({
+          name: `NotAuthorized`,
+          message: `Invalid email or password`,
+        });
+      }
+
+      const isValid = compareSync(password,user.password)
+
+      if (!isValid) {
+        return next({
+          name: `NotAuthorized`,
+          message: `Invalid email or password`,
+        });
+      }
+
+      const access_token = signToken({ UserId: user.id });
+
+      return res.status(200).json({ access_token:access_token });
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ login ~ error:", error)
       next(error);
     }
   }
