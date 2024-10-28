@@ -16,6 +16,7 @@ app.use(authentication)
 app.get("/favorites",Controller.getFavorite)
 app.post("/favorites",Controller.addFavorite)
 app.delete("/favorites/:id/delete",updateDelete,Controller.deleteFavorite)
+app.patch("/favorites/:id/update", updateDelete, Controller.updateFavorite);
 
 app.use(errorHandler)
 app.listen(port, () => {

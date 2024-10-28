@@ -125,7 +125,29 @@ class Controller {
 
       res.status(200).json(pokemonFav);
     } catch (error) {
-      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error);
+      console.log("🚀 ~ Controller ~ getFavorite ~ error:", error)
+      next(error);
+    }
+  }
+
+  static async updateFavorite(req, res, next) {
+    const {nickname,funFact} = req.body
+    const {id} = req.params
+    try {
+      const pokemonFav = await Favorite.findByPk(id);
+
+      if (!pokemonFav) {
+        return next({
+          name: "NotFound",
+          message: "Pokemon not found",
+        });
+      }
+
+      await pokemonFav.update({ nickname, funFact });
+
+      return res.status(200).json(pokemonFav);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ updateFavorite ~ error:", error)
       next(error);
     }
   }
