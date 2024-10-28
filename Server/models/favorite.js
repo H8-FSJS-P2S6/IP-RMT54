@@ -13,8 +13,34 @@ module.exports = (sequelize, DataTypes) => {
   }
   Favorite.init(
     {
-      UserId: DataTypes.INTEGER,
-      PokemonId: DataTypes.INTEGER,
+      UserId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            args: true,
+            msg: `User Id is required`,
+          },
+          notEmpty: {
+            args: true,
+            msg: `User Id is required`,
+          },
+        },
+      },
+      PokemonId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            args: true,
+            msg: `Pokemon Id is required`,
+          },
+          notEmpty: {
+            args: true,
+            msg: `Pokemon Id is required`,
+          },
+        },
+      },
       nickname: DataTypes.STRING,
       funFact: DataTypes.STRING,
     },

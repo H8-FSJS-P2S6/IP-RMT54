@@ -21,6 +21,11 @@ function errorHandler(err, req, res, next) {
     case "BadReq":
       res.status(409).json({ message: err.message });
       break;
+    case "SequelizeUniqueConstraintError":
+      res
+        .status(409)
+        .json({ message:err.message });
+      break;
 
     default:
       res.status(500).json({ message: "Internal Server Error" });

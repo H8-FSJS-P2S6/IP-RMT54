@@ -1,5 +1,5 @@
 const { compareSync } = require("bcrypt");
-const { User } = require("../models");
+const { User,Favorite } = require("../models");
 const { signToken } = require("../helpers/jwt");
 
 class Controller {
@@ -53,6 +53,19 @@ class Controller {
     } catch (error) {
       console.log("🚀 ~ Controller ~ login ~ error:", error)
       next(error);
+    }
+  }
+
+  static async addFavorite(req,res,next){
+    const {PokemonId,funFact} = req.body
+    try {
+        const {id} = req.user
+        const pokemonFav = await Favorite.create({PokemonId,UserId:id,funFact})
+        
+        res.status(201).json(pokemonFav)
+    } catch (error) {
+        console.log("🚀 ~ Controller ~ addFavorite ~ error:", error)
+        next(error)
     }
   }
 }
