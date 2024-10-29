@@ -1,6 +1,8 @@
+import AnimeCard from "./components/Card/Card"
+
 function App() {
   return (
-    <h1>KATANYA INI ANIME?</h1>
+    <AnimeCard/>
   )
 }
 
