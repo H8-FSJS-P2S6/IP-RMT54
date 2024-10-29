@@ -3,17 +3,17 @@ const Controller = require("./controllers/controller");
 const errorHandler = require("./middlewares/errorHandler");
 const authentication = require("./middlewares/authentication");
 const { updateDelete } = require("./middlewares/authorization");
-const cors = require("cors")
+const cors = require("cors");
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({ extended: true }));
 
-app.post("/register",Controller.register);
-app.post("/login",Controller.login);
+app.post("/register", Controller.register);
+app.post("/login", Controller.login);
 
-app.get("/favorites",authentication,Controller.getFavorite)
+app.get("/favorites", authentication, Controller.getFavorite);
 app.post("/favorites", authentication, Controller.addFavorite);
 
 app.delete(
@@ -29,6 +29,8 @@ app.patch(
   Controller.updateFavorite
 );
 
-app.use(errorHandler)
+app.get("/user",authentication, Controller.getUser);
 
-module.exports = app
+app.use(errorHandler);
+
+module.exports = app;

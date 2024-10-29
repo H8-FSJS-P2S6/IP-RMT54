@@ -8,6 +8,8 @@ let token2 = ""
 beforeAll(async () => {
   let data = [
     {
+      userName:"admin123",
+      role:"admin",
       email: "admin123@email.com",
       password: await bcrypt.hash("admin123", 10),
     },

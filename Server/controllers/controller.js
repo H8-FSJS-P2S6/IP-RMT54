@@ -1,12 +1,17 @@
 const { compareSync } = require("bcrypt");
-const { User, Favorite } = require("../models");
+const { User, Favorite, Profile } = require("../models");
 const { signToken } = require("../helpers/jwt");
 
 class Controller {
   static async register(req, res, next) {
-    const { email, password } = req.body;
+    const { email, password, userName } = req.body;
     try {
-      const user = await User.create({ email, password });
+      const user = await User.create({
+        email,
+        password,
+        userName,
+        role: "user",
+      });
 
       const userResponse = user.get({ plain: true });
       delete userResponse.password;
@@ -149,6 +154,23 @@ class Controller {
       return res.status(200).json(pokemonFav);
     } catch (error) {
       console.log("🚀 ~ Controller ~ updateFavorite ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async getUser(req, res, next) {
+    try {
+      const {id} = req.user
+      const user = await User.findByPk(id, {
+        include: Profile,
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+      
+      return res.status(200).json(user);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ getUser ~ error:", error)
       next(error);
     }
   }
