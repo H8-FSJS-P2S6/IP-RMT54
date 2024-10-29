@@ -2,9 +2,12 @@ const express = require("express");
 const Controller = require("./controllers/controller");
 const errorHandler = require("./middlewares/errorHandler");
 const authentication = require("./middlewares/authentication");
-const { updateDelete } = require("./middlewares/authorization");
+const { updateDelete, admin } = require("./middlewares/authorization");
 const cors = require("cors");
 const app = express();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 app.use(cors());
 app.use(express.json());
@@ -29,8 +32,16 @@ app.patch(
   Controller.updateFavorite
 );
 
-app.get("/user",authentication, Controller.getUser);
-app.patch("/user",authentication, Controller.updateUser);
+app.get("/users",authentication, Controller.getUser);
+app.patch("/users",authentication, Controller.updateUser);
+
+app.get("/profiles", authentication, Controller.getUser);
+app.delete("/profiles", authentication,admin, Controller.updateUser);
+
+const multer = require("multer")
+const storage = multer.memoryStorage()
+const upload = multer({storage:storage})
+app.post("/profiles", authentication,admin,upload.single('imgUrl'), Controller.addProfile);
 
 app.use(errorHandler);
 

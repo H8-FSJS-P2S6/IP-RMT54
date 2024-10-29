@@ -2,6 +2,7 @@ const { compareSync } = require("bcrypt");
 const { User, Favorite, Profile } = require("../models");
 const { signToken } = require("../helpers/jwt");
 
+
 class Controller {
   static async register(req, res, next) {
     const { email, password, userName } = req.body;
@@ -98,26 +99,6 @@ class Controller {
     }
   }
 
-  static async deleteFavorite(req, res, next) {
-    const { id } = req.params;
-    try {
-      const pokemonFav = await Favorite.findByPk(id);
-      if (!pokemonFav) {
-        return next({
-          name: `NotFound`,
-          message: `Pokemon not found`,
-        });
-      }
-
-      await Favorite.destroy({ where: { id } });
-
-      res.status(200).json(pokemonFav);
-    } catch (error) {
-      console.log("🚀 ~ Controller ~ deleteFavorite ~ error:", error);
-      next(error);
-    }
-  }
-
   static async getFavorite(req, res, next) {
     try {
       const user = req.user;
@@ -176,10 +157,10 @@ class Controller {
   }
 
   static async updateUser(req, res, next) {
-    const {ProfileId,userName} = req.body
+    const { ProfileId, userName } = req.body;
     try {
       const { id } = req.user;
-      await User.update({ProfileId,userName},{where:{id}});
+      await User.update({ ProfileId, userName }, { where: { id } });
       const user = await User.findByPk(id, {
         include: Profile,
         attributes: {
@@ -190,6 +171,35 @@ class Controller {
       return res.status(200).json(user);
     } catch (error) {
       console.log("🚀 ~ Controller ~ getUser ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async addProfile(req, res, next) {
+    try {
+      // console.log("🚀 ~ Controller ~ addProfile ~ file:", file)
+      const cloudinary = require("cloudinary").v2;
+      cloudinary.config({
+        cloud_name: process.env.CloudinaryName,
+        api_key: process.env.CloudinaryKey,
+        api_secret: process.env.CloudinarySecret,
+      });
+
+      
+      let mimeType = req.file.mimetype;
+      let data = req.file.buffer.toString("base64");
+      
+      let response = await cloudinary.uploader.upload(
+        `data:${mimeType};base64,${data}`
+      );
+      // console.log(response,"<<<<<<<<<<<<");
+      let imgUrl = response.secure_url;
+
+      await Profile.create({imgUrl})
+
+      res.status(201).json("Added image succesfully!");
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ addFavorite ~ error:", error);
       next(error);
     }
   }

@@ -1,4 +1,4 @@
-const {Favorite} = require("../models");
+const { Favorite } = require("../models");
 
 async function updateDelete(req, res, next) {
   let user = req.user;
@@ -12,7 +12,7 @@ async function updateDelete(req, res, next) {
   }
 
   try {
-    const {id} = req.params
+    const { id } = req.params;
     const fav = await Favorite.findByPk(id);
 
     if (!fav) {
@@ -32,4 +32,26 @@ async function updateDelete(req, res, next) {
     next(error);
   }
 }
-module.exports = {updateDelete}
+
+async function admin(req, res, next) {
+  let user = req.user;
+  //   console.log(req.params);
+
+  // console.log("Request Params:", req.params);
+  // console.log("User from req:", user);
+
+  try {
+    if (user.role !== "admin") {
+      return next({
+        name: "Forbidden",
+        message: "Your are not Authorized",
+      });
+    }else{
+      next()
+    }
+  } catch (error) {
+    console.error("Authorization error:", error);
+    next(error);
+  }
+}
+module.exports = { updateDelete,admin };

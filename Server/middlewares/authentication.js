@@ -3,14 +3,14 @@ const { verifyToken } = require("../helpers/jwt");
 
 async function authentication(req, res, next) {
   const bearerToken = req.headers.authorization;
-  console.log(bearerToken);
+  // console.log(bearerToken);
   if (!bearerToken) {
     next({ name: "JsonWebTokenError" });
     return;
   }
 
   const token = bearerToken.split(" ")[1];
-  console.log(token);
+  // console.log(token);
   
   if (!token) {
     next({ name: "JsonWebTokenError" });
