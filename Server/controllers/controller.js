@@ -160,17 +160,36 @@ class Controller {
 
   static async getUser(req, res, next) {
     try {
-      const {id} = req.user
+      const { id } = req.user;
       const user = await User.findByPk(id, {
         include: Profile,
         attributes: {
           exclude: ["password"],
         },
       });
-      
+
       return res.status(200).json(user);
     } catch (error) {
-      console.log("🚀 ~ Controller ~ getUser ~ error:", error)
+      console.log("🚀 ~ Controller ~ getUser ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async updateUser(req, res, next) {
+    const {ProfileId,userName} = req.body
+    try {
+      const { id } = req.user;
+      await User.update({ProfileId,userName},{where:{id}});
+      const user = await User.findByPk(id, {
+        include: Profile,
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+
+      return res.status(200).json(user);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ getUser ~ error:", error);
       next(error);
     }
   }

@@ -30,6 +30,7 @@ app.patch(
 );
 
 app.get("/user",authentication, Controller.getUser);
+app.patch("/user",authentication, Controller.updateUser);
 
 app.use(errorHandler);
 
