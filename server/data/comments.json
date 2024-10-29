@@ -1,0 +1,18 @@
+[
+    {
+      "userId": 1,
+      "mal_id": 1,
+      "comment": "Great anime!"
+    },
+    {
+      "userId": 2,
+      "mal_id": 2,
+      "comment": "Really enjoyed it!"
+    },
+    {
+      "userId": 1,
+      "mal_id": 3,
+      "comment": "Can't wait for the next episode!"
+    }
+  ]
+  
