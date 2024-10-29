@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 
-export function Login() {
+export function Register() {
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -20,11 +20,13 @@ export function Login() {
     console.log(user);
   };
 
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:3000/login", user);
-      localStorage.setItem("access_token", data.access_token);
+      await axios.post("http://localhost:3000/register", user);
+      navigate("/login")
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       Swal.fire({
@@ -72,7 +74,7 @@ export function Login() {
           style={{ width: "350px", borderRadius: "10px", boxShadow: "none" }}
         >
           <form onSubmit={handleSubmit}>
-            <h2 className="font-weight-bold mb-4">Pokémon Trainer Login</h2>
+            <h2 className="font-weight-bold mb-4">Pokémon Trainer Register</h2>
             <div className="gap-2 d-flex flex-column">
               <div className="form-group">
                 <input
@@ -113,16 +115,16 @@ export function Login() {
                   e.target.style.color = "#3B4CCA";
                 }}
               >
-                Login
+                Register
               </button>
               <button
                 className="btn btn-block btn-primary mt-3"
                 style={{ backgroundColor: "#dd4b39" }}
               >
-                <i className="fab fa-google me-2"></i> Sign in with Google
+                <i className="fab fa-google me-2"></i> Sign up with Google
               </button>
               <p className="mt-3">
-                Don't have an Account? <Link to="/register">Register</Link>
+                have an Account? <Link to="/login">Login</Link>
               </p>
             </div>
           </form>
