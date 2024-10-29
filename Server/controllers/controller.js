@@ -115,7 +115,8 @@ class Controller {
 
   static async getFavorite(req, res, next) {
     try {
-      const pokemonFav = await Favorite.findAll();
+      const user = req.user;
+      const pokemonFav = await Favorite.findAll({ where: { UserId: user.id } });
       if (!pokemonFav) {
         return next({
           name: `NotFound`,
@@ -125,14 +126,14 @@ class Controller {
 
       res.status(200).json(pokemonFav);
     } catch (error) {
-      console.log("🚀 ~ Controller ~ getFavorite ~ error:", error)
+      console.log("🚀 ~ Controller ~ getFavorite ~ error:", error);
       next(error);
     }
   }
 
   static async updateFavorite(req, res, next) {
-    const {nickname,funFact} = req.body
-    const {id} = req.params
+    const { nickname, funFact } = req.body;
+    const { id } = req.params;
     try {
       const pokemonFav = await Favorite.findByPk(id);
 
@@ -147,7 +148,7 @@ class Controller {
 
       return res.status(200).json(pokemonFav);
     } catch (error) {
-      console.log("🚀 ~ Controller ~ updateFavorite ~ error:", error)
+      console.log("🚀 ~ Controller ~ updateFavorite ~ error:", error);
       next(error);
     }
   }

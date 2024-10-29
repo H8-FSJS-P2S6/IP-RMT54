@@ -16,7 +16,7 @@ async function updateDelete(req, res, next) {
     const fav = await Favorite.findByPk(id);
 
     if (!fav) {
-      next({ name: `NotFound`, message: "Pokemon Not Found" });
+      return next({ name: `NotFound`, message: "Pokemon Not Found" });
     }
 
     if (fav.UserId === user.id) {
@@ -24,7 +24,7 @@ async function updateDelete(req, res, next) {
     } else {
       return next({
         name: "Forbidden",
-        message: "You can only modify your own products",
+        message: "Your are not Authorized",
       });
     }
   } catch (error) {

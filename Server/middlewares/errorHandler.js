@@ -1,4 +1,5 @@
 function errorHandler(err, req, res, next) {
+  console.log("🚀 ~ errorHandler ~ err:", err)
   switch (err.name) {
     case "JsonWebTokenError":
       res.status(401).json({ message: `Invalid Token` });
@@ -13,7 +14,9 @@ function errorHandler(err, req, res, next) {
       res.status(401).json({ message: err.message });
       break;
     case "SequelizeValidationError":
-      res.status(400).json(err.errors.map((e) => e.message));
+      return res
+        .status(400)
+        .json({ message: err.errors.map((e) => e.message) })
       break;
     case "Conflict":
       res.status(409).json({ message: err.message });
