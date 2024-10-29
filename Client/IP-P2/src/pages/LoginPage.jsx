@@ -122,7 +122,7 @@ export function Login() {
                 <i className="fab fa-google me-2"></i> Sign in with Google
               </button>
               <p className="mt-3">
-                Don't have an Account? <Link to="/register">Register</Link>
+                Don't have an Account?? <Link to="/register">Register</Link>
               </p>
             </div>
           </form>
