@@ -4,10 +4,9 @@ const { User } = require("../models");
 
 beforeAll(async () => {
   let data = {
+    userName:"admin123",
     email: "admin123@email.com",
     password: "admin123",
-    createdAt: new Date(),
-    updatedAt: new Date(),
   };
   await User.create(data);
 });
@@ -80,6 +79,7 @@ describe("Login: Let's check the status and response when", () => {
 describe("Registration: Let's check the status and response when", () => {
   test("Registration is successful and a user is created", async () => {
     const response = await request(app).post("/register").send({
+      userName:"new",
       email: "newuser@email.com",
       password: "newpassword",
     });
@@ -94,6 +94,7 @@ describe("Registration: Let's check the status and response when", () => {
 
   test("Email is not provided", async () => {
     const response = await request(app).post("/register").send({
+      userName:"new",
       email: "",
       password: "newpassword",
     });
@@ -105,6 +106,7 @@ describe("Registration: Let's check the status and response when", () => {
 
   test("Password is not provided", async () => {
     const response = await request(app).post("/register").send({
+      userName: "new",
       email: "newuser@email.com",
       password: "",
     });
@@ -114,8 +116,21 @@ describe("Registration: Let's check the status and response when", () => {
     expect(response.body.message[0]).toBe("Password is required");
   });
 
+  test("User Name is not provided", async () => {
+    const response = await request(app).post("/register").send({
+      userName: "",
+      email: "newuser@email.com",
+      password: "new",
+    });
+    console.log("🚀 ~ response ~ response:", response.body);
+
+    expect(response.status).toBe(400);
+    expect(response.body.message[0]).toBe("User Name is required");
+  });
+
   test("Email is already in use", async () => {
     const response = await request(app).post("/register").send({
+      userName: "new",
       email: "admin123@email.com",
       password: "admin123",
     });
@@ -127,3 +142,4 @@ describe("Registration: Let's check the status and response when", () => {
     );
   });
 });
+

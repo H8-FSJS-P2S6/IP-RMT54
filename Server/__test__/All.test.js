@@ -1,26 +1,26 @@
 const request = require("supertest");
 const app = require("../app");
 const { User, Favorite } = require("../models");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 
 let token = "";
-let token2 = ""
+let token2 = "";
 beforeAll(async () => {
   let data = [
     {
-      userName:"admin123",
-      role:"admin",
+      userName: "admin123",
       email: "admin123@email.com",
       password: await bcrypt.hash("admin123", 10),
     },
     {
+      userName: "admin1234",
       email: "admin1234@email.com",
       password: await bcrypt.hash("admin123", 10),
     },
   ];
   await User.bulkCreate(data);
-//   console.log(user);
-  
+  //   console.log(user);
+
   const response = await request(app).post("/login").send({
     email: "admin123@email.com",
     password: "admin123",
@@ -31,11 +31,10 @@ beforeAll(async () => {
     password: "admin123",
   });
 
-
   token = response.body.access_token;
   token2 = response2.body.access_token;
   // console.log(response.body,"<<<<<<<<<<<<<<<<<<<<<<<<<");
-  console.log(token2,"<<<<<<<<<<");
+  console.log(token, "<<<<<<<<<<");
 
   let favorite = [
     {
@@ -68,13 +67,13 @@ afterAll(async () => {
 describe("Favorite: Let's check the status and response when", () => {
   test("Add Favorite is successful", async () => {
     const response = await request(app)
-    .post("/favorites")
-    .set("Authorization", `Bearer ${token}`)
-    .send({
+      .post("/favorites")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
         UserId: 1,
         PokemonId: 2,
-    });
-    console.log("🚀 ~ test ~ response:", response.body)
+      });
+    console.log("🚀 ~ test ~ response:", response.body);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
       expect.objectContaining({
@@ -144,13 +143,66 @@ describe("Favorite: Let's check the status and response when", () => {
   });
 
   test("Patch Favorite is failed user is not authorized", async () => {
-    const response = await request(app).patch("/favorites/1/update").set("Authorization",`Bearer ${token2}`).send({
-      nickname: `tikus listrik`,
-      funFact: `can turn on tv for you with his electricity`,
-    });
-    console.log("🚀 ~ response ~ response:", response.body)
+    const response = await request(app)
+      .patch("/favorites/1/update")
+      .set("Authorization", `Bearer ${token2}`)
+      .send({
+        nickname: `tikus listrik`,
+        funFact: `can turn on tv for you with his electricity`,
+      });
+    console.log("🚀 ~ response ~ response:", response.body);
     // console.log("🚀 ~ response ~ response:", response.body);
     expect(response.status).toBe(403);
     expect(response.body.message).toBe("Your are not Authorized");
+  });
+});
+
+describe("User: Let's check the status and response when", () => {
+  test("Get user successful", async () => {
+    const response = await request(app)
+      .get("/users")
+      .set("Authorization", `Bearer ${token}`);
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: 1,
+        userName: "admin123",
+      })
+    );
+  });
+
+  test("Get user failed because Token is not sended/wrong", async () => {
+    const response = await request(app).get("/users");
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid Token");
+  });
+
+  test("Patch user successful", async () => {
+    const response = await request(app)
+      .patch("/users")
+      .set("Authorization", `Bearer ${token}`).send({
+        userName:"admin2"
+      });
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        id: 1,
+        userName: "admin2",
+      })
+    );
+  });
+
+  test("Patch user failed because Token is not sended/wrong", async () => {
+    const response = await request(app)
+      .patch("/users")
+      .send({
+        userName: "admin2",
+      });
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid Token");
   });
 });
