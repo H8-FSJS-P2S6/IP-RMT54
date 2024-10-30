@@ -43,7 +43,7 @@ export function PokemonCard({ id, name, img, type, weight, height, realId }) {
   return (
     <div className="container">
       {isShown && (
-        <div className="show">
+        <div className="shows">
           <img src={img} alt={name} style={{ width: "300px" }} />
           <table className="table rounded-3">
             <thead className="table-warning">

@@ -39,7 +39,7 @@
   filter: invert(1);
 }
 
-.show {
+.shows {
   position: fixed;
   display: flex;
   align-items: center;
@@ -52,7 +52,7 @@
   z-index: 2;
 }
 
-.show {
+.shows {
   filter: drop-shadow(2px 4px 12x black);
   max-width: 300px;
 }
