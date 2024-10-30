@@ -2,10 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import openBall from "../images/clipart1298306.png";
 import { ImageUploadModal } from "../components/ModalUploadImg";
+import { ProfileEditModal } from "../components/ProfileEdit";
 
 export function Profile() {
   const [user, setUser] = useState({});
   const [show,setShow] = useState(false)
+  const [showEditModal,setShowEditModal] = useState(false)
 
   const handleClose = ()=>{
     setShow(false)
@@ -32,7 +34,6 @@ export function Profile() {
 
   return (
     <>
-      {console.log(user)}
       <section
         className="w-100 px-4 py-5"
         style={{
@@ -66,9 +67,19 @@ export function Profile() {
                         type="button"
                         className="btn btn-outline-primary me-1 flex-grow-1"
                         style={{ width: "10px" }}
+                        onClick={()=>{
+                            setShowEditModal(true)
+                        }}
                       >
                         <i className="fas fa-pen"></i>
                       </button>
+                      <ProfileEditModal
+                        show={showEditModal}
+                        handleClose={() => setShowEditModal(false)}
+                        fetchData={fetchUser}
+                        name={user.userName}
+                      />
+
                       {user.role == "admin" && (
                         <button
                           type="button"
@@ -88,11 +99,11 @@ export function Profile() {
         </div>
       </section>
       <ImageUploadModal
-          fetchData={fetchUser}
-          show={show}
-          handleClose={handleClose}
-          centered
-        />
+        fetchData={fetchUser}
+        show={show}
+        handleClose={handleClose}
+        centered
+      />
       <div className="mt-3 gap-3">
         <div className="card" style={{ width: "10rem" }}>
           <img

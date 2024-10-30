@@ -58,7 +58,7 @@ export function ImageUploadModal({ show, handleClose, fetchData }) {
               onChange={handleFileChange}
             />
           </Form.Group>
-          <Button variant="primary" type="submit">
+          <Button className="w-100%" variant="primary" type="submit">
             Upload
           </Button>
         </Form>
