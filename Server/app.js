@@ -36,8 +36,7 @@ app.patch(
 app.get("/users",authentication, Controller.getUser);
 app.patch("/users",authentication, Controller.updateUser);
 
-app.get("/profiles", authentication, Controller.getUser);
-app.delete("/profiles", authentication,admin, Controller.updateUser);
+app.get("/profiles", authentication, Controller.getProfile);
 
 const multer = require("multer")
 const storage = multer.memoryStorage()

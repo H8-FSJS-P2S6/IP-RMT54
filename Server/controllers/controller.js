@@ -75,18 +75,17 @@ class Controller {
       });
       const payload = ticket.getPayload();
 
-      const [user,created]= await User.findOrCreate({
-        where:{
-          email:payload.email
+      const [user, created] = await User.findOrCreate({
+        where: {
+          email: payload.email,
         },
-        defaults:{
-          userName:payload.name,
-          email:payload.email,
-          password:"password-google"
+        defaults: {
+          userName: payload.name,
+          email: payload.email,
+          password: "password-google",
         },
-        hooks:false
-      })
-      
+        hooks: false,
+      });
 
       const access_token = signToken({ UserId: user.id });
 
@@ -98,13 +97,12 @@ class Controller {
   }
 
   static async addFavorite(req, res, next) {
-    const { PokemonId, funFact } = req.body;
+    const { PokemonId } = req.body;
     try {
       const { id } = req.user;
       const pokemonFav = await Favorite.create({
         PokemonId,
         UserId: id,
-        funFact,
       });
 
       res.status(201).json(pokemonFav);
@@ -153,7 +151,7 @@ class Controller {
   }
 
   static async updateFavorite(req, res, next) {
-    const { nickname, funFact } = req.body;
+    const { nickname } = req.body;
     const { id } = req.params;
     try {
       const pokemonFav = await Favorite.findByPk(id);
@@ -165,7 +163,7 @@ class Controller {
         });
       }
 
-      await pokemonFav.update({ nickname, funFact });
+      await pokemonFav.update({ nickname });
 
       return res.status(200).json(pokemonFav);
     } catch (error) {
@@ -234,6 +232,17 @@ class Controller {
       res.status(201).json("Added image succesfully!");
     } catch (error) {
       console.log("🚀 ~ Controller ~ addFavorite ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async getProfile(req, res, next) {
+    try {
+      const profile = await Profile.findAll()
+
+      return res.status(200).json(profile);
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ getUser ~ error:", error);
       next(error);
     }
   }
