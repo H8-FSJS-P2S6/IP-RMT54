@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -20,13 +20,13 @@ export function Register() {
     console.log(user);
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post("http://localhost:3000/register", user);
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       Swal.fire({
@@ -63,7 +63,7 @@ export function Register() {
           src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5f297040585033.57851fbd33ae2.jpg"
           alt="Pokémon Logo"
           style={{
-            width: "230px",
+            width: "194px",
             borderRadius: "10px",
           }}
         />
@@ -116,12 +116,6 @@ export function Register() {
                 }}
               >
                 Register
-              </button>
-              <button
-                className="btn btn-block btn-primary mt-3"
-                style={{ backgroundColor: "#dd4b39" }}
-              >
-                <i className="fab fa-google me-2"></i> Sign up with Google
               </button>
               <p className="mt-3">
                 have an Account? <Link to="/login">Login</Link>

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -20,11 +20,13 @@ export function Login() {
     console.log(user);
   };
 
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const { data } = await axios.post("http://localhost:3000/login", user);
       localStorage.setItem("access_token", data.access_token);
+      navigate("/");
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);
       Swal.fire({
@@ -34,6 +36,22 @@ export function Login() {
       });
     }
   };
+  function handleCredentialResponse(response) {
+    console.log("Encoded JWT ID token: " + response.credential);
+  }
+
+  useEffect(() => {
+    window.google.accounts.id.initialize({
+      client_id:
+        "697357985271-l1afcf7tksdvfcn75hb7qu0rktsie7fg.apps.googleusercontent.com",
+      callback: handleCredentialResponse,
+    });
+    window.google.accounts.id.renderButton(
+      document.getElementById("buttonDiv"),
+      { theme: "outline", size: "large" } // customization attributes
+    );
+    window.google.accounts.id.prompt(); // also display the One Tap dialog
+  }, []);
   return (
     <div
       style={{
@@ -61,7 +79,7 @@ export function Login() {
           src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5f297040585033.57851fbd33ae2.jpg"
           alt="Pokémon Logo"
           style={{
-            width: "230px",
+            width: "237px",
             borderRadius: "10px",
           }}
         />
@@ -115,14 +133,37 @@ export function Login() {
               >
                 Login
               </button>
-              <button
-                className="btn btn-block btn-primary mt-3"
-                style={{ backgroundColor: "#dd4b39" }}
+              <div
+                className="d-flex justify-content-center w-100"
+                style={{ backgroundColor: "#fff", padding: "0", margin: "0" }}
               >
-                <i className="fab fa-google me-2"></i> Sign in with Google
-              </button>
+                <button
+                  className="btn btn-outline-secondary d-flex align-items-center justify-content-center w-100"
+                  id="buttonDiv"
+                  style={{
+                    borderRadius: "8px",
+                    padding: "8px",
+                    fontWeight: "bold",
+                    backgroundColor: "#fff", // Ensures button background is white
+                    boxShadow: "none", // Remove any shadow if present
+                    borderColor: "#dbdbd9", // Optional: match border color to the login form
+                  }}
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                    alt="Google Logo"
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      marginRight: "8px",
+                    }}
+                  />
+                  <span>Sign in with Google</span>
+                </button>
+              </div>
+
               <p className="mt-3">
-                Don't have an Account?? <Link to="/register">Register</Link>
+                Don&apos;t have an Account? <Link to="/register">Register</Link>
               </p>
             </div>
           </form>
