@@ -32,13 +32,13 @@ export function PokemonCard({ id, name, img, type, weight, height, realId }) {
   };
 
   const FunFact = async (pokemon) => {
-    // const response = await gemini(pokemon);
+    const response = await gemini(pokemon);
 
-    // Swal.fire({
-    //   icon: "info",
-    //   title: `Fun Fact about ${pokemon}`,
-    //   text: response,
-    // });
+    Swal.fire({
+      icon: "info",
+      title: `Fun Fact about ${pokemon}`,
+      text: response,
+    });
   };
   return (
     <div className="container">
