@@ -36,8 +36,19 @@ export function Login() {
       });
     }
   };
-  function handleCredentialResponse(response) {
+  async function handleCredentialResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
+    const { data } = await axios.post(
+      "http://localhost:3000/googleLogin",
+      null,
+      {
+        headers: {
+          token: response.credential,
+        },
+      }
+    );
+    localStorage.setItem("access_token", data.access_token);
+    navigate("/");
   }
 
   useEffect(() => {
