@@ -119,15 +119,13 @@ describe("Favorite: Let's check the status and response when", () => {
       .patch("/favorites/1/update")
       .set("Authorization", `Bearer ${token}`)
       .send({
-        nickname: `tikus listrik`,
-        funFact: `can turn on tv for you with his electricity`,
+        nickname: `tikus listrik`
       });
     // console.log("🚀 ~ response ~ response:", response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        nickname: `tikus listrik`,
-        funFact: `can turn on tv for you with his electricity`,
+        nickname: `tikus listrik`
       })
     );
   });

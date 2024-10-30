@@ -43,7 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       nickname: DataTypes.STRING,
-      funFact: DataTypes.STRING,
     },
     {
       sequelize,

@@ -24,9 +24,6 @@ module.exports = {
         nickname: {
           type: Sequelize.STRING,
         },
-        funFact: {
-          type: Sequelize.STRING,
-        },
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE,
