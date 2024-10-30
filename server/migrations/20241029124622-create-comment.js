@@ -22,12 +22,6 @@ module.exports = {
       mal_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: {
-          model: "Animes",
-          key: "mal_id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
       },
       comment: {
         type: Sequelize.STRING,

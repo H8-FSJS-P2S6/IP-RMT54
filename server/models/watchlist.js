@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Watchlist.belongsTo(models.User, { foreignKey: 'userId' });
-      Watchlist.belongsTo(models.Anime, { foreignKey: 'mal_id' })
     }
   }
   Watchlist.init({

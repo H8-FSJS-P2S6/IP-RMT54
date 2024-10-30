@@ -11,7 +11,7 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false, // Not empty
+        allowNull: false, 
         references: {
           model: 'Users',
           key: 'id',
@@ -21,13 +21,7 @@ module.exports = {
       },
       mal_id: {
         type: Sequelize.INTEGER,
-        allowNull: false, 
-        references: {
-          model: 'Animes',
-          key: 'mal_id',
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
