@@ -1,9 +1,9 @@
-import AnimeCard from "./components/Card/Card"
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
+import "./App.css";
 
 function App() {
-  return (
-    <AnimeCard/>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
