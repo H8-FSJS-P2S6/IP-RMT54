@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post("/register", Controller.register);
 app.post("/login", Controller.login);
+app.post("/googleLogin", Controller.googleLogin);
 
 app.get("/favorites", authentication, Controller.getFavorite);
 app.post("/favorites", authentication, Controller.addFavorite);

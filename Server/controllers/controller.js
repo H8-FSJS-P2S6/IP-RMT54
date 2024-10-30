@@ -1,7 +1,7 @@
 const { compareSync } = require("bcrypt");
 const { User, Favorite, Profile } = require("../models");
 const { signToken } = require("../helpers/jwt");
-
+const { OAuth2Client } = require("google-auth-library");
 
 class Controller {
   static async register(req, res, next) {
@@ -58,6 +58,41 @@ class Controller {
       return res.status(200).json({ access_token: access_token });
     } catch (error) {
       console.log("🚀 ~ Controller ~ login ~ error:", error);
+      next(error);
+    }
+  }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const { token } = req.headers;
+
+      const client = new OAuth2Client();
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: process.env.GoogleClientId, // Specify the CLIENT_ID of the app that accesses the backend
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+
+      const [user,created]= await User.findOrCreate({
+        where:{
+          email:payload.email
+        },
+        defaults:{
+          userName:payload.name,
+          email:payload.email,
+          password:"password-google"
+        },
+        hooks:false
+      })
+      
+
+      const access_token = signToken({ UserId: user.id });
+
+      return res.status(200).json({ access_token: access_token });
+    } catch (error) {
+      console.log("🚀 ~ Controller ~ googleLogin ~ error:", error);
       next(error);
     }
   }
@@ -185,17 +220,16 @@ class Controller {
         api_secret: process.env.CloudinarySecret,
       });
 
-      
       let mimeType = req.file.mimetype;
       let data = req.file.buffer.toString("base64");
-      
+
       let response = await cloudinary.uploader.upload(
         `data:${mimeType};base64,${data}`
       );
       // console.log(response,"<<<<<<<<<<<<");
       let imgUrl = response.secure_url;
 
-      await Profile.create({imgUrl})
+      await Profile.create({ imgUrl });
 
       res.status(201).json("Added image succesfully!");
     } catch (error) {
