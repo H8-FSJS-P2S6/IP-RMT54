@@ -3,7 +3,7 @@ const { Comment } = require('../models');
 
 class CommentController {
   static async create(req, res, next) {
-    const { userId } = 1
+    const { userId } = req.user
     const { comment } = req.body;
     const { mal_id } = req.query
     try {
