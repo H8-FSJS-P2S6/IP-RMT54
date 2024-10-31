@@ -2,15 +2,11 @@ const { Comment } = require('../models');
 
 class CommentController {
   static async create(req, res, next) {
-    const { userId } = req.user
+    const { userId } = 1
     const { comment } = req.body;
     const { mal_id } = req.query
     try {
-      const newComment = await Comment.create({ userId, mal_id, comment }, {
-        Headers: {
-          Authorzation: `Bearer ${localStorage.getItem("access_token")}`
-        }
-      });
+      const newComment = await Comment.create({ userId, mal_id, comment })
       res.status(201).json(newComment);
     } catch (err) {
       next(err);
