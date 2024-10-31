@@ -2,7 +2,9 @@ const { Comment } = require('../models');
 
 class CommentController {
   static async create(req, res, next) {
-    const { userId, mal_id, comment } = req.body;
+    const { userId } = req.user.id
+    const { comment } = req.body;
+    const { mal_id } = req.query
     try {
       const newComment = await Comment.create({ userId, mal_id, comment });
       res.status(201).json(newComment);
@@ -35,7 +37,9 @@ class CommentController {
 
   static async update(req, res, next) {
     const { id } = req.params;
-    const { userId, mal_id, comment } = req.body;
+    const { comment } = req.body;
+    const { userId } = req.user.id
+    const { mal_id } = req.query
     try {
       const [updated] = await Comment.update({ userId, mal_id, comment }, {
         where: { id },
