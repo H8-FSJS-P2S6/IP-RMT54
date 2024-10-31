@@ -113,9 +113,9 @@ class Controller {
   }
 
   static async deleteFavorite(req, res, next) {
-    const { id } = req.params;
+    const { pokemonName } = req.params;
     try {
-      const pokemonFav = await Favorite.findByPk(id);
+      const pokemonFav = await Favorite.findOne({where:{pokemonName}});
       if (!pokemonFav) {
         return next({
           name: `NotFound`,
@@ -123,7 +123,7 @@ class Controller {
         });
       }
 
-      await Favorite.destroy({ where: { id } });
+      await Favorite.destroy({ where: { pokemonName } });
 
       res.status(200).json(pokemonFav);
     } catch (error) {

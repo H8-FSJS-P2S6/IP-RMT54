@@ -21,7 +21,7 @@ app.get("/favorites", authentication, Controller.getFavorite);
 app.post("/favorites", authentication, Controller.addFavorite);
 
 app.delete(
-  "/favorites/:id/delete",
+  "/favorites/:pokemonName",
   authentication,
   updateDelete,
   Controller.deleteFavorite
