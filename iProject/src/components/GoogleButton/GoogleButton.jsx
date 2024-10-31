@@ -13,7 +13,7 @@ export default function GoogleButton() {
     });
     window.google.accounts.id.renderButton(
       document.getElementById('buttonDiv'),
-      { theme: 'outline', size: 'large'} // customization attributes
+      { theme: 'outline', size: 'large', locale: 'en'} // customization attributes
     );
     window.google.accounts.id.prompt(); // also display the One Tap dialog
   }, []);
@@ -34,5 +34,5 @@ export default function GoogleButton() {
     }
   }
 
-  return <div id="buttonDiv" className='justify-self-center mt3'></div>;
+  return <div id="buttonDiv" className='justify-self-center mt3' ></div>;
 }
