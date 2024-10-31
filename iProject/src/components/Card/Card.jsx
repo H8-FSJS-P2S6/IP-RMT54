@@ -1,12 +1,7 @@
 import PropTypes from "prop-types";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export default function CardAnime({ anime }) {
-  const navigate = useNavigate();
-
-  const handleAnimeDetail = (mal_id) => {
-    navigate(`/anime/${mal_id}`)
-  }
   return (
     <div className="card" style={{ width: "18rem" }}>
       <Link to={`/anime/${anime.mal_id}`} >

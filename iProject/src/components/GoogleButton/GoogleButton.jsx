@@ -13,7 +13,7 @@ export default function GoogleButton() {
     });
     window.google.accounts.id.renderButton(
       document.getElementById('buttonDiv'),
-      { theme: 'outline', size: 'large', locale: 'en'} // customization attributes
+      { theme: 'outline', size: 'large', locale: 'fr'} // customization attributes
     );
     window.google.accounts.id.prompt(); // also display the One Tap dialog
   }, []);
@@ -26,7 +26,7 @@ export default function GoogleButton() {
           token: response.credential,
         },
       });
-      localStorage.setItem('access_token', `Bearer ${data.access_token}`);
+      localStorage.setItem('access_token', `${data.access_token}`);
       navigate('/');
     } catch (error) {
       console.log(error);
