@@ -2,6 +2,8 @@
 
 ## Models
 
+### Base Url
+- https://ip-p2.brandon-hash268.online/
 ### User
 
 - email: string, required, unique
