@@ -1,43 +1,81 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import PropTypes from "prop-types";
+import { Link, useNavigate } from "react-router-dom";
 
-const AnimeCard = () => {
-  const [anime, setAnime] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function CardAnime({ anime }) {
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchAnime = async () => {
-      try {
-        const  response  = await axios.get('https://api.jikan.moe/v4/anime');
-        setAnime(response.data.data);
-        console.log( response.data.data )
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAnime();
-  }, []);
-
-  if (loading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center">Error: {error.message}</div>;
-
+  const handleAnimeDetail = (mal_id) => {
+    navigate(`/anime/${mal_id}`)
+  }
   return (
-    
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {anime.map((anime) => (
-        <div key={anime.id} className="max-w-sm mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-          <img className="w-full h-48 object-cover" src={anime.images.jpg.image_url} alt={anime.title} /> {/* Ukuran fix */}
-          <div className="p-4">
-            <h2 className="text-xl font-bold mb-2">{anime.title}</h2>
-          </div>
-        </div>
-      ))}
+    <div className="card" style={{ width: "18rem" }}>
+      <Link to={`/anime/${anime.mal_id}`} >
+        <img
+          src={anime.images.webp.image_url}
+          className="card-img-top"
+          alt={anime.title}
+        />
+      </Link>
+      <div className="card-body">
+        <h5 className="card-title">{anime.title}</h5>
+      </div>
     </div>
   );
-};
+}
 
-export default AnimeCard;
+CardAnime.propTypes = {
+  anime: PropTypes.shape({
+    aired: PropTypes.shape({
+      from: PropTypes.string.isRequired,
+      to: PropTypes.string.isRequired,
+      string: PropTypes.string.isRequired,
+    }).isRequired,
+    airing: PropTypes.bool.isRequired,
+    approved: PropTypes.bool.isRequired,
+    background: PropTypes.string.isRequired,
+    broadcast: PropTypes.shape({
+      day: PropTypes.string.isRequired,
+      time: PropTypes.string.isRequired,
+      timezone: PropTypes.string.isRequired,
+      string: PropTypes.string.isRequired,
+    }).isRequired,
+    demographics: PropTypes.array.isRequired,
+    duration: PropTypes.string.isRequired,
+    episodes: PropTypes.number.isRequired,
+    explicit_genres: PropTypes.array.isRequired,
+    favorites: PropTypes.number.isRequired,
+    genres: PropTypes.array.isRequired,
+    images: PropTypes.shape({
+      jpg: PropTypes.object.isRequired,
+      webp: PropTypes.object.isRequired,
+    }).isRequired,
+    licensors: PropTypes.array.isRequired,
+    mal_id: PropTypes.number.isRequired,
+    members: PropTypes.number.isRequired,
+    popularity: PropTypes.number.isRequired,
+    producers: PropTypes.array.isRequired,
+    rank: PropTypes.number.isRequired,
+    rating: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
+    scored_by: PropTypes.number.isRequired,
+    season: PropTypes.string.isRequired,
+    source: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    studios: PropTypes.array.isRequired,
+    synopsis: PropTypes.string.isRequired,
+    themes: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired,
+    title_english: PropTypes.string.isRequired,
+    title_japanese: PropTypes.string.isRequired,
+    title_synonyms: PropTypes.array.isRequired,
+    trailer: PropTypes.shape({
+      youtube_id: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+      embed_url: PropTypes.string.isRequired,
+      images: PropTypes.object.isRequired,
+    }).isRequired,
+    type: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
+  }).isRequired,
+};
