@@ -1,5 +1,6 @@
 const { Comment } = require('../models');
 
+
 class CommentController {
   static async create(req, res, next) {
     const { userId } = 1
