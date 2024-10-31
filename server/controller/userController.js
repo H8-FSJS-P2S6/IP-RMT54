@@ -84,6 +84,7 @@ class UserController {
         hooks: false,
       });
       const access_token = signToken({ id: user.id, email: user.email });
+      console.log(access_token)
       return res.status(200).json({ access_token });
     } catch (err) {
       console.log("🚀 ~ UserController ~ googleLogin ~ err:", err)
