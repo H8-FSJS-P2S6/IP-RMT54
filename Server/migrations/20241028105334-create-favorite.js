@@ -13,15 +13,12 @@ module.exports = {
         },
         UserId: {
           type: Sequelize.INTEGER,
-          references:{
-            model:"Users",
-            key:"id"
-          }
+          references: {
+            model: "Users",
+            key: "id",
+          },
         },
-        PokemonId: {
-          type: Sequelize.INTEGER,
-        },
-        nickname: {
+        pokemonName: {
           type: Sequelize.STRING,
         },
         createdAt: {
@@ -36,7 +33,7 @@ module.exports = {
       {
         uniqueKeys: {
           unique_favorite: {
-            fields: ["UserId", "PokemonId"],
+            fields: ["UserId", "pokemonName"],
           },
         },
       }

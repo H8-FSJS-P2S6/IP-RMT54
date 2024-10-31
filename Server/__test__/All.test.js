@@ -1,6 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
-const { User, Favorite } = require("../models");
+const { User, Favorite, Profile } = require("../models");
 const bcrypt = require("bcrypt");
 
 let token = "";
@@ -34,19 +34,29 @@ beforeAll(async () => {
   token = response.body.access_token;
   token2 = response2.body.access_token;
   // console.log(response.body,"<<<<<<<<<<<<<<<<<<<<<<<<<");
-  console.log(token, "<<<<<<<<<<");
+  // console.log(token, "<<<<<<<<<<");
 
   let favorite = [
     {
       UserId: 1,
-      PokemonId: 1,
+      pokemonName: "Pikachu",
     },
     {
       UserId: 2,
-      PokemonId: 1,
+      pokemonName: "Bulbasaur",
     },
   ];
   await Favorite.bulkCreate(favorite);
+
+  let pictures = [
+    {
+      imgUrl: "pict1",
+    },
+    {
+      imgUrl: "pict2",
+    },
+  ];
+  await Profile.bulkCreate(pictures);
 });
 
 afterAll(async () => {
@@ -62,6 +72,12 @@ afterAll(async () => {
     cascade: true,
     truncate: true,
   });
+  await Profile.destroy({
+    where: {},
+    restartIdentity: true,
+    cascade: true,
+    truncate: true,
+  });
 });
 
 describe("Favorite: Let's check the status and response when", () => {
@@ -71,14 +87,14 @@ describe("Favorite: Let's check the status and response when", () => {
       .set("Authorization", `Bearer ${token}`)
       .send({
         UserId: 1,
-        PokemonId: 2,
+        pokemonName: "Bulbasaur",
       });
-    console.log("🚀 ~ test ~ response:", response.body);
+    // console.log("🚀 ~ test ~ response:", response.body);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(
       expect.objectContaining({
         UserId: 1,
-        PokemonId: 2,
+        pokemonName: "Bulbasaur",
       })
     );
   });
@@ -86,7 +102,7 @@ describe("Favorite: Let's check the status and response when", () => {
   test("Add Favorite is failed because Token is not sended/wrong", async () => {
     const response = await request(app).post("/favorites").send({
       UserId: 1,
-      PokemonId: 2,
+      pokemonName: "Bulbasaur",
     });
     // console.log("🚀 ~ response ~ response:", response.body);
     expect(response.status).toBe(401);
@@ -101,7 +117,7 @@ describe("Favorite: Let's check the status and response when", () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        PokemonId: 2,
+        pokemonName: "Bulbasaur",
         UserId: 1,
       })
     );
@@ -112,46 +128,6 @@ describe("Favorite: Let's check the status and response when", () => {
     // console.log("🚀 ~ response ~ response:", response.body);
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid Token");
-  });
-
-  test("Patch Favorite is successful", async () => {
-    const response = await request(app)
-      .patch("/favorites/1/update")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        nickname: `tikus listrik`
-      });
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        nickname: `tikus listrik`
-      })
-    );
-  });
-
-  test("Patch Favorite is failed because Token is not sended/wrong", async () => {
-    const response = await request(app).patch("/favorites/1/update").send({
-      nickname: `tikus listrik`,
-      funFact: `can turn on tv for you with his electricity`,
-    });
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(401);
-    expect(response.body.message).toBe("Invalid Token");
-  });
-
-  test("Patch Favorite is failed user is not authorized", async () => {
-    const response = await request(app)
-      .patch("/favorites/1/update")
-      .set("Authorization", `Bearer ${token2}`)
-      .send({
-        nickname: `tikus listrik`,
-        funFact: `can turn on tv for you with his electricity`,
-      });
-    console.log("🚀 ~ response ~ response:", response.body);
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(403);
-    expect(response.body.message).toBe("Your are not Authorized");
   });
 });
 
@@ -180,26 +156,98 @@ describe("User: Let's check the status and response when", () => {
   test("Patch user successful", async () => {
     const response = await request(app)
       .patch("/users")
-      .set("Authorization", `Bearer ${token}`).send({
-        userName:"admin2"
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        userName: "admin2",
+        ProfileId: 1,
       });
-    // console.log("🚀 ~ response ~ response:", response.body);
+    // console.log("🚀 ~ response ~ response:<<<<<<<<<<<<<<<", response.body);
+
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
         id: 1,
         userName: "admin2",
+        ProfileId: 1,
       })
     );
   });
 
   test("Patch user failed because Token is not sended/wrong", async () => {
-    const response = await request(app)
-      .patch("/users")
-      .send({
-        userName: "admin2",
-      });
+    const response = await request(app).patch("/users").send({
+      userName: "admin2",
+    });
     // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid Token");
+  });
+});
+
+describe("Favorite: Let's check the status and response when", () => {
+  test("Add Favorite is successful", async () => {
+    const response = await request(app)
+      .post("/favorites")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        UserId: 1,
+        pokemonName: "Bulbasaur",
+      });
+    // console.log("🚀 ~ test ~ response:", response.body);
+    expect(response.status).toBe(201);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        UserId: 1,
+        pokemonName: "Bulbasaur",
+      })
+    );
+  });
+
+  test("Add Favorite is failed because Token is not sended/wrong", async () => {
+    const response = await request(app).post("/favorites").send({
+      UserId: 1,
+      pokemonName: "Bulbasaur",
+    });
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid Token");
+  });
+
+  test("Delete Favorite is successful", async () => {
+    const response = await request(app)
+      .delete("/favorites/1/delete")
+      .set("Authorization", `Bearer ${token}`);
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        pokemonName: "Pikachu",
+        UserId: 1,
+      })
+    );
+  });
+
+  test("Delete Favorite is failed because Token is not sended/wrong", async () => {
+    const response = await request(app).delete("/favorites/1/delete");
+    // console.log("🚀 ~ response ~ response:", response.body);
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe("Invalid Token");
+  });
+});
+
+describe("Profile: Let's check the status and response when", () => {
+  test("Get Profile is successful", async () => {
+    const response = await request(app)
+      .get("/profiles")
+      .set("Authorization", `Bearer ${token}`);
+    // console.log("🚀 ~ response ~ response:>>>>>>>>>", response.body);
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBeGreaterThan(0);
+  });
+
+  test("Get Profile failed because Token is not sended/wrong", async () => {
+    const response = await request(app)
+      .get("/profiles")
+    // console.log("🚀 ~ response ~ response:>>>>>>>>>", response.body);
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid Token");
   });

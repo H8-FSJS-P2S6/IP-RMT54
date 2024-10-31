@@ -28,21 +28,20 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      PokemonId: {
-        type: DataTypes.INTEGER,
+      pokemonName: {
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
             args: true,
-            msg: `Pokemon Id is required`,
+            msg: `Pokemon Name is required`,
           },
           notEmpty: {
             args: true,
-            msg: `Pokemon Id is required`,
+            msg: `Pokemon Name is required`,
           },
         },
       },
-      nickname: DataTypes.STRING,
     },
     {
       sequelize,
@@ -50,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       indexes: [
         {
           unique: true,
-          fields: ["UserId", "PokemonId"],
+          fields: ["UserId", "pokemonName"],
         },
       ],
     }

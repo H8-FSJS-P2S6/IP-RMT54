@@ -26,12 +26,6 @@ app.delete(
   updateDelete,
   Controller.deleteFavorite
 );
-app.patch(
-  "/favorites/:id/update",
-  authentication,
-  updateDelete,
-  Controller.updateFavorite
-);
 
 app.get("/users",authentication, Controller.getUser);
 app.patch("/users",authentication, Controller.updateUser);
