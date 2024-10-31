@@ -1,23 +1,33 @@
 /* eslint-disable react/prop-types */
 import "./PokemonCard.css";
 import pokeball from "../images/image-removebg-preview.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { gemini } from "../helpers/Gemini";
+import hoverSound from "../sounds/mixkit-player-jumping-in-a-video-game-2043.wav";
+import { errorSound, sounds } from "../helpers/sound";
+import funFactSound from "../sounds/mixkit-winning-a-coin-video-game-2069.wav"
+import pokeballCatchSfx from "../sounds/pokemon-caught!-(pokemon-go-jingle)-made-with-Voicemod.mp3"
 
-export function PokemonCard({ id, name, img, type, weight, height, realId }) {
+
+export function PokemonCard({ id, name, img, type, weight, height }) {
   const [isShown, setIsShown] = useState(false);
+
+  const sound = sounds(hoverSound)
+  const ffSound = sounds(funFactSound)
+  const pokeballCatchSound = sounds(pokeballCatchSfx);
 
   const navigate = useNavigate();
 
   const handleFavorite = async () => {
     try {
+      // pokeballCatchSound.start();
       await axios.post(
-        "http://localhost:3000/login",
+        "http://localhost:3000/favorites",
         {
-          PokemonId: realId,
+          pokemonName: name,
         },
         {
           headers: {
@@ -25,21 +35,50 @@ export function PokemonCard({ id, name, img, type, weight, height, realId }) {
           },
         }
       );
+        if (pokeballCatchSound.loaded) {
+          pokeballCatchSound.start();
+        } else {
+          pokeballCatchSound.onload = () => {
+            pokeballCatchSound.start();
+          };
+        }
       navigate("/profile");
     } catch (error) {
-      console.log(error);
+      console.log("🚀 ~ handleFavorite ~ error:", error)
+      errorSound.start();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "You already have this Pokemon on favorited",
+      });
     }
   };
 
   const FunFact = async (pokemon) => {
     const response = await gemini(pokemon);
-
+    ffSound.start()
     Swal.fire({
       icon: "info",
       title: `Fun Fact about ${pokemon}`,
       text: response,
     });
   };
+
+
+   const onMouse = async () => {
+     setIsShown(true);
+     sound.start();
+   };
+
+   const onMouseLeave = () => {
+     setIsShown(false);
+     sound.stop();
+   };
+
+   useEffect(() => {
+     pokeballCatchSound.load();
+   }, []);
+
   return (
     <div className="container">
       {isShown && (
@@ -65,8 +104,8 @@ export function PokemonCard({ id, name, img, type, weight, height, realId }) {
       )}
       <div
         className="right"
-        onMouseEnter={() => setIsShown(true)}
-        onMouseLeave={() => setIsShown(false)}
+        onMouseEnter={onMouse}
+        onMouseLeave={onMouseLeave}
         onClick={() => {
           FunFact(name);
         }}
@@ -82,7 +121,10 @@ export function PokemonCard({ id, name, img, type, weight, height, realId }) {
           src={pokeball}
           alt="pokeball"
           style={{ marginLeft: "auto", width: "40px" }}
-          onClick={handleFavorite}
+          onClick={(e) => {
+            e.stopPropagation(); 
+            handleFavorite();
+          }}
         />
       </div>
     </div>

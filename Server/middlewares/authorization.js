@@ -12,8 +12,8 @@ async function updateDelete(req, res, next) {
   }
 
   try {
-    const { id } = req.params;
-    const fav = await Favorite.findByPk(id);
+    const { pokemonName } = req.params;
+    const fav = await Favorite.findOne({ where: {pokemonName} });
 
     if (!fav) {
       return next({ name: `NotFound`, message: "Pokemon Not Found" });

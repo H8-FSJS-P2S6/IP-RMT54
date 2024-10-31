@@ -111,20 +111,20 @@ describe("Favorite: Let's check the status and response when", () => {
 
   test("Delete Favorite is successful", async () => {
     const response = await request(app)
-      .delete("/favorites/3/delete")
+      .delete("/favorites/Pikachu")
       .set("Authorization", `Bearer ${token}`);
-    // console.log("🚀 ~ response ~ response:", response.body);
+    // console.log("🚀 ~ response ~ response:<<<<<<<<<<<<<<", response.body);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        pokemonName: "Bulbasaur",
+        pokemonName: "Pikachu",
         UserId: 1,
       })
     );
   });
 
   test("Delete Favorite is failed because Token is not sended/wrong", async () => {
-    const response = await request(app).delete("/favorites/1/delete");
+    const response = await request(app).delete("/favorites/Bulbasaur");
     // console.log("🚀 ~ response ~ response:", response.body);
     expect(response.status).toBe(401);
     expect(response.body.message).toBe("Invalid Token");
@@ -183,56 +183,6 @@ describe("User: Let's check the status and response when", () => {
   });
 });
 
-describe("Favorite: Let's check the status and response when", () => {
-  test("Add Favorite is successful", async () => {
-    const response = await request(app)
-      .post("/favorites")
-      .set("Authorization", `Bearer ${token}`)
-      .send({
-        UserId: 1,
-        pokemonName: "Bulbasaur",
-      });
-    // console.log("🚀 ~ test ~ response:", response.body);
-    expect(response.status).toBe(201);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        UserId: 1,
-        pokemonName: "Bulbasaur",
-      })
-    );
-  });
-
-  test("Add Favorite is failed because Token is not sended/wrong", async () => {
-    const response = await request(app).post("/favorites").send({
-      UserId: 1,
-      pokemonName: "Bulbasaur",
-    });
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(401);
-    expect(response.body.message).toBe("Invalid Token");
-  });
-
-  test("Delete Favorite is successful", async () => {
-    const response = await request(app)
-      .delete("/favorites/1/delete")
-      .set("Authorization", `Bearer ${token}`);
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(
-      expect.objectContaining({
-        pokemonName: "Pikachu",
-        UserId: 1,
-      })
-    );
-  });
-
-  test("Delete Favorite is failed because Token is not sended/wrong", async () => {
-    const response = await request(app).delete("/favorites/1/delete");
-    // console.log("🚀 ~ response ~ response:", response.body);
-    expect(response.status).toBe(401);
-    expect(response.body.message).toBe("Invalid Token");
-  });
-});
 
 describe("Profile: Let's check the status and response when", () => {
   test("Get Profile is successful", async () => {

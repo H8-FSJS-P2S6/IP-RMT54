@@ -2,12 +2,16 @@ import { Modal, Button, Form, Image } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { errorSound, sounds, successSound } from "../helpers/sound";
+import selectSfx from "../sounds/mixkit-player-jumping-in-a-video-game-2043.wav"
 
+// eslint-disable-next-line react/prop-types
 export function ProfileEditModal({ show, handleClose, fetchData, name }) {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState([]);
   const [userName, setUserName] = useState("");
 
+  const selectSound = sounds(selectSfx)
   // Handle image selection
   const fetchProfile = async () => {
     try {
@@ -16,56 +20,64 @@ export function ProfileEditModal({ show, handleClose, fetchData, name }) {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      console.log(data, "<<<<<");
-      
+      // console.log(data, "<<<<<");
+
       setImages(data);
     } catch (error) {
-      console.log(error);
+      errorSound.start();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response.data.message,
+      });
     }
   };
 
   // Handle form submission
   useEffect(() => {
     fetchProfile();
-    setUserName(name)
+    setUserName(name);
   }, [name]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedImage) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Please select an image",
-      });
-      return;
-    }
     try {
-      await axios.patch("http://localhost:3000/users",{userName,ProfileId:selectedImage}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      fetchData(); // Refresh profile data
+      await axios.patch(
+        "http://localhost:3000/users",
+        { userName, ProfileId: selectedImage },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      successSound.start()
       Swal.fire({
         icon: "success",
         title: "Success",
-        text: "Profile image updated successfully!",
+        text: "Profile updated successfully!",
       });
-      handleClose(); // Close modal after successful upload
+      fetchData();
+      handleClose(); 
     } catch (error) {
       console.log(error);
+      errorSound.start();
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response?.data?.error || "An error occurred",
+        text: "Please Select an Image first" 
       });
     }
   };
 
+  const handleChangeImg=(id)=>{
+    setSelectedImage(id);
+    selectSound.start()
+  }
+
   return (
     <Modal show={show} onHide={handleClose} centered>
-      {console.log(userName)}
+      {/* {console.log(userName)} */}
 
       <Modal.Header closeButton>
         <Modal.Title>Edit Profile Picture</Modal.Title>
@@ -85,7 +97,7 @@ export function ProfileEditModal({ show, handleClose, fetchData, name }) {
                   backgroundColor:
                     selectedImage === e.id ? "#cce5ff" : "transparent",
                 }}
-                onClick={() => setSelectedImage(e.id)}
+                onClick={() => handleChangeImg(e.id)}
                 key={e.id}
               />
             ))}

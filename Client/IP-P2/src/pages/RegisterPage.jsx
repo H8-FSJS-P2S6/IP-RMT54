@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { GoogleLogin } from "../components/GoogleLogin";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -63,7 +64,7 @@ export function Register() {
           src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5f297040585033.57851fbd33ae2.jpg"
           alt="Pokémon Logo"
           style={{
-            width: "194px",
+            width: "222px",
             borderRadius: "10px",
           }}
         />
@@ -117,6 +118,7 @@ export function Register() {
               >
                 Register
               </button>
+              <GoogleLogin />
               <p className="mt-3">
                 have an Account? <Link to="/login">Login</Link>
               </p>

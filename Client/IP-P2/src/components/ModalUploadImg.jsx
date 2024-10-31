@@ -1,7 +1,8 @@
 import { Modal, Button, Form } from "react-bootstrap";
-import {  useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { errorSound, successSound } from "../helpers/sound";
 
 // eslint-disable-next-line react/prop-types
 export function ImageUploadModal({ show, handleClose, fetchData }) {
@@ -23,8 +24,11 @@ export function ImageUploadModal({ show, handleClose, fetchData }) {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
         });
+        successSound.start()
         fetchData();
       } else {
+        errorSound.start();
+
         Swal.fire({
           icon: "error",
           title: "Error",
@@ -37,33 +41,37 @@ export function ImageUploadModal({ show, handleClose, fetchData }) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: error.response.data.error
+        text: error.response.data.error,
       });
     }
   };
 
   return (
     <>
-    <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Upload Image</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="productImage" className="mb-3">
-            <Form.Label>Select Image</Form.Label>
-            <Form.Control
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-            />
-          </Form.Group>
-          <Button className="w-100%" variant="primary" type="submit">
-            Upload
-          </Button>
-        </Form>
-      </Modal.Body>
-    </Modal>
+      <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Upload Image</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="productImage" className="mb-3">
+              <Form.Label>Select Image</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </Form.Group>
+            <Button
+              className="w-100 text-align-center"
+              variant="primary"
+              type="submit"
+            >
+              Upload
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </>
   );
 }
