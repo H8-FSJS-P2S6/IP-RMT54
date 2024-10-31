@@ -7,7 +7,7 @@ export default function DetailsPage() {
   const [anime, setAnime] = useState(null);
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
-  const {userId} = req.user
+//   const {userId} = req.user
   const fetchAnimeDetails = async () => {
     try {
       const response = await animeAPI.get(`/anime/${mal_id}`);
@@ -19,7 +19,6 @@ export default function DetailsPage() {
 
   const postComment = async () => {
     const newComment = {
-        userId,
       mal_id: parseInt(mal_id),
       comment,
     };
