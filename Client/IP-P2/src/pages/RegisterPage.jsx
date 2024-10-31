@@ -26,7 +26,7 @@ export function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/register", user);
+      await axios.post("https://ip-p2.brandon-hash268.online/register", user);
       navigate("/login");
     } catch (error) {
       console.log("🚀 ~ handleSubmit ~ error:", error);

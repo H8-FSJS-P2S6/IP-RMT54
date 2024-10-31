@@ -29,7 +29,10 @@ export function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post("http://localhost:3000/login", user);
+      const { data } = await axios.post(
+        "https://ip-p2.brandon-hash268.online/login",
+        user
+      );
       localStorage.setItem("access_token", data.access_token);
       loginSound.start()
       navigate("/");

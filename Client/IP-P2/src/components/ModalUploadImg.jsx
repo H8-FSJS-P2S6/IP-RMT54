@@ -19,11 +19,15 @@ export function ImageUploadModal({ show, handleClose, fetchData }) {
 
     try {
       if (selectedImage) {
-        await axios.post("http://localhost:3000/profiles", formData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-          },
-        });
+        await axios.post(
+          "https://ip-p2.brandon-hash268.online/profiles",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            },
+          }
+        );
         successSound.start()
         fetchData();
       } else {

@@ -28,7 +28,7 @@ export function Profile() {
 
   const fetchFavorite = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/favorites", {
+      const { data } = await axios.get("https://ip-p2.brandon-hash268.online/favorites", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -49,7 +49,7 @@ export function Profile() {
 
   const fetchUser = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/users", {
+      const { data } = await axios.get("https://ip-p2.brandon-hash268.online/users", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -69,7 +69,7 @@ export function Profile() {
   const handleUnfavorited = async (pokemonName) => {
     try {
       releaseSound.start();
-      await axios.delete("http://localhost:3000/favorites/" + pokemonName, {
+      await axios.delete("https://ip-p2.brandon-hash268.online/favorites/" + pokemonName, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },

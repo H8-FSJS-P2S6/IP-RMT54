@@ -25,7 +25,7 @@ export function PokemonCard({ id, name, img, type, weight, height }) {
     try {
       // pokeballCatchSound.start();
       await axios.post(
-        "http://localhost:3000/favorites",
+        "https://ip-p2.brandon-hash268.online/favorites",
         {
           pokemonName: name,
         },

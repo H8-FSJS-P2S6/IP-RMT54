@@ -15,7 +15,7 @@ export function GoogleLogin() {
             
             console.log("Encoded JWT ID token: " + response.credential);
             const { data } = await axios.post(
-              "http://localhost:3000/googleLogin",
+              "https://ip-p2.brandon-hash268.online/googleLogin",
               null,
               {
                 headers: {

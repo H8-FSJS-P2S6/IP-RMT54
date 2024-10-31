@@ -15,7 +15,7 @@ export function ProfileEditModal({ show, handleClose, fetchData, name }) {
   // Handle image selection
   const fetchProfile = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/profiles", {
+      const { data } = await axios.get("https://ip-p2.brandon-hash268.online/profiles", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
@@ -43,7 +43,7 @@ export function ProfileEditModal({ show, handleClose, fetchData, name }) {
     e.preventDefault();
     try {
       await axios.patch(
-        "http://localhost:3000/users",
+        "https://ip-p2.brandon-hash268.online/users",
         { userName, ProfileId: selectedImage },
         {
           headers: {
