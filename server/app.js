@@ -10,7 +10,7 @@ var cors = require('cors')
 const PORT = process.env.PORT || 3000;
 app.use(cors())
 
-const { authentication } = require("./middlewares/autohentication");
+const { authentication } = require("./middlewares/authentication");
 const errorHandler = require("./middlewares/errorHandler");
 const Controller = require("./controller/homeController");
 const userRouter = require('./routes/userRoute')
