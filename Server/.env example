@@ -1,5 +1,6 @@
 NODE_ENV = development
 PORT = 
+secretKey = 
 CloudinaryName = 
 CloudinaryKey =
 CloudinarySecret = 
