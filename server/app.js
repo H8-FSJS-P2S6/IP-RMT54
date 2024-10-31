@@ -33,9 +33,4 @@ app.use('/watchlist', watchlistRouter)
 //error handler
 app.use(errorHandler)
 
-//comment for testing
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
-});
-
 module.exports = app;
