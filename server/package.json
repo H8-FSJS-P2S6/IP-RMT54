@@ -5,7 +5,7 @@
   "scripts": {
     "pre:test": "npx sequelize db:migrate:undo:all --env test && npx sequelize db:migrate --env test && npx sequelize db:seed:all --env test",
     "test": "npm run pre:test && jest --verbose  --detectOpenHandles --forceExit --runInBand",
-    "dev": "npx nodemon app.js"
+    "dev": "npx nodemon bin/www"
   },
   "keywords": [],
   "author": "",
