@@ -32,6 +32,20 @@ class WatchlistController {
     }
   }
 
+  //// READ (by userId)
+  static async getWatchlistByUserId(req, res, next) {
+    try {
+      const { userId } = req.params; // Get userId from request parameters
+      const watchlists = await Watchlist.findAll({
+        where: { userId: userId },
+      });
+      if (watchlists.length === 0) throw { name: 'NotFound', message: 'No watchlists found for this user' };
+      res.status(200).json(watchlists);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   // UPDATE
   static async updateWatchlist(req, res, next) {
     try {

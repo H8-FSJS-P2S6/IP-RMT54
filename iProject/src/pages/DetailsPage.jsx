@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import animeAPI from "../api/AnimeApi";
+import serverAPI from "../api/ServerApi";
+import { jwtDecode } from "jwt-decode";
 
 export default function DetailsPage() {
   const { mal_id } = useParams();
   const [anime, setAnime] = useState(null);
-  const [comments, setComments] = useState([]);
+  const [newComments, setNewComments] = useState("");
+  const [reload, setReload] = useState(false);
   const [comment, setComment] = useState("");
-//   const {userId} = req.user
+  //   const {userId} = req.user
   const fetchAnimeDetails = async () => {
     try {
       const response = await animeAPI.get(`/anime/${mal_id}`);
@@ -17,27 +20,40 @@ export default function DetailsPage() {
     }
   };
 
+  const getUserId = () => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("Decoded Token:", decodedToken);
+      return decodedToken.id;
+    }
+    return null;
+  };
+
   const postComment = async () => {
-    const newComment = {
-      mal_id: parseInt(mal_id),
-      comment,
-    };
-
+    // const userId = getUserId(); // Get user ID
+    // console.log("Posting Comment with User ID:", userId);
     try {
-      const response = await fetch("https://p2.alifnaufaldo.online/comments/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await serverAPI.post(
+        `/comments`,
+        {
+          userId: 9,
+          mal_id: mal_id,
+          comment: comment,
         },
-        body: JSON.stringify(newComment),
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Failed to submit comment");
+      if (response.status === 200) {
+        setReload(true);
+        setComment(""); // Clear the input if successful
+      } else {
+        console.error("Failed to submit comment:", response.data);
       }
-
-      const data = await response.json();
-      setComments((prev) => [...prev, data.comment]); // Assuming the response returns the created comment
     } catch (err) {
       console.log("🚀 ~ postComment ~ err:", err);
     }
@@ -68,14 +84,18 @@ export default function DetailsPage() {
       <div className="row">
         <div className="col-md-6">
           <img
-            src={anime.images.webp.image_url}
+            src={anime.images.webp.large_image_url}
             className="img-fluid"
             alt={anime.title}
           />
         </div>
         <div className="col-md-6">
           <h1>{anime.title}</h1>
-          <p>{anime.synopsis}</p>
+          <h5>Rank: {anime.rank}</h5>
+          <h5>Score: {anime.score}</h5>
+          <p style={{ fontFamily: 'Hozier, sans-serif', fontSize: '16px', lineHeight: '1.5' }}>
+          {anime.synopsis}
+          </p>
           <ul>
             <li>
               <strong>Genre:</strong>{" "}
@@ -90,6 +110,15 @@ export default function DetailsPage() {
             <li>
               <strong>Status:</strong> {anime.status}
             </li>
+              <div className="embed-container mt-3">
+                <iframe
+                  src={anime.trailer.embed_url} 
+                  title="Trailer"
+                  frameBorder="0"
+                  allowFullScreen
+                  className="embed-responsive"
+                ></iframe>
+              </div>
           </ul>
         </div>
       </div>
@@ -113,13 +142,13 @@ export default function DetailsPage() {
 
         <div className="mt-4">
           <h4>Daftar Komentar:</h4>
-          <ul className="list-unstyled">
-            {comments.map((c, index) => (
+          {/* <ul className="list-unstyled">
+            {.map((c, index) => (
               <li key={index} className="border p-2 mb-2">
                 {c}
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
       </div>
     </div>
