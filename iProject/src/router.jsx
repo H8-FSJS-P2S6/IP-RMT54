@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import Navbar from "./components/Navbar/Navbar";
 import DetailsPage from "./pages/DetailsPage";
+import WatchlistPage from "./pages/WatchlistPage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: '/anime/:mal_id',
         element: <DetailsPage/>
+      },
+      {
+        path: '/watchlist/:userId',
+        element: <WatchlistPage/>
       }
     ]
   }

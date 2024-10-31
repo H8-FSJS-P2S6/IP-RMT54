@@ -1,18 +1,31 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+      if (location.hash) {
+          const element = document.getElementById(location.hash.replace('#', ''));
+          if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+          }
+      }
+  }, [location]);
 
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     navigate("/login");
   };
+
+  
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/">
           Nonton Anime Terus?
-        </a>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -27,15 +40,20 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
+              <Link className="nav-link active" aria-current="page" to="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/">
-                Watchlist
+              <Link className="nav-link" to="#GeminiAIChat">
+                AI Recomendation
               </Link>
             </li>   
+            {/* <li className="nav-item">
+              <Link className="nav-link" to="/watchlist/9" >
+                Watchlist
+              </Link>
+            </li>    */}
           </ul>
           <button className="btn btn-outline-danger" onClick={handleLogout}>
             Logout

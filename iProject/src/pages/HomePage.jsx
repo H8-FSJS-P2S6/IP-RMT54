@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import animeAPI from "../api/AnimeApi";
 import CardAnime from "../components/Card/Card";
+import GeminiAI from "../components/GeminiAi/GeminiAI";
+import Swal from "sweetalert2";
 
 export default function HomePage() {
   const [anime, setAnime] = useState([]);
@@ -14,6 +16,7 @@ export default function HomePage() {
       console.log(response.data.data);
     } catch (err) {
       console.log("🚀 ~ fetchAnimes ~ err:", err);
+      Swal.fire(err.response.data.message);
     }
   };
 
@@ -23,16 +26,13 @@ export default function HomePage() {
 
   return (
     <section>
-        <div className="d-flex justify-content-center py-5 flex-wrap gap-5">
-            {anime.map((e) => {
-              return (
-                <CardAnime
-                  key={e.id}
-                  anime={e}
-                  fetchAnimes={fetchAnimes}
-                />
-              );
-            })}
+      <div className="d-flex justify-content-center py-5 flex-wrap gap-5 w-50%">
+        {anime.map((e) => {
+          return <CardAnime key={e.id} anime={e} fetchAnimes={fetchAnimes} />;
+        })}
+      </div>
+      <div className="chat-container text-center mb-4 justify-content-center">
+        <GeminiAI />
       </div>
     </section>
   );
