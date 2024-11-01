@@ -8,6 +8,7 @@ import { GoogleLogin } from "../components/GoogleLogin";
 
 export function Register() {
   const [user, setUser] = useState({
+    userName:"",
     email: "",
     password: "",
   });
@@ -61,10 +62,10 @@ export function Register() {
       >
         {/* Left Image */}
         <img
-          src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5f297040585033.57851fbd33ae2.jpg"
+          src="https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/4e87dc40585033.57851fbd344c8.jpg"
           alt="Pokémon Logo"
           style={{
-            width: "222px",
+            width: "247px",
             borderRadius: "10px",
           }}
         />
@@ -77,6 +78,17 @@ export function Register() {
           <form onSubmit={handleSubmit}>
             <h2 className="font-weight-bold mb-4">Pokémon Trainer Register</h2>
             <div className="gap-2 d-flex flex-column">
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control rounded-pill"
+                  placeholder="User Name"
+                  name="userName"
+                  value={user.userName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="form-group">
                 <input
                   type="text"

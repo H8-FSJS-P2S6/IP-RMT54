@@ -44,7 +44,11 @@ export function ProfileEditModal({ show, handleClose, fetchData, name, profiles 
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Please Select an Image first" 
+        text:
+          error.response.data.message ==
+          "ProfileId cannot be an array or an object"
+            ? "You must select an Image first"
+            : error.response.data.message,
       });
     }
   };
