@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { errorSound, successSound } from "../helpers/sound";
 
 // eslint-disable-next-line react/prop-types
-export function ImageUploadModal({ show, handleClose, fetchData }) {
+export function ImageUploadModal({ show, handleClose, fetchProfile }) {
   const [selectedImage, setSelectedImage] = useState(null);
 
   const handleFileChange = (e) => {
@@ -29,7 +29,7 @@ export function ImageUploadModal({ show, handleClose, fetchData }) {
           }
         );
         successSound.start()
-        fetchData();
+        fetchProfile();
       } else {
         errorSound.start();
 

@@ -6,36 +6,15 @@ import { errorSound, sounds, successSound } from "../helpers/sound";
 import selectSfx from "../sounds/mixkit-player-jumping-in-a-video-game-2043.wav"
 
 // eslint-disable-next-line react/prop-types
-export function ProfileEditModal({ show, handleClose, fetchData, name }) {
-  const [images, setImages] = useState([]);
+export function ProfileEditModal({ show, handleClose, fetchData, name, profiles }) {
   const [selectedImage, setSelectedImage] = useState([]);
   const [userName, setUserName] = useState("");
 
   const selectSound = sounds(selectSfx)
   // Handle image selection
-  const fetchProfile = async () => {
-    try {
-      const { data } = await axios.get("https://ip-p2.brandon-hash268.online/profiles", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
-      // console.log(data, "<<<<<");
-
-      setImages(data);
-    } catch (error) {
-      errorSound.start();
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.response.data.message,
-      });
-    }
-  };
 
   // Handle form submission
   useEffect(() => {
-    fetchProfile();
     setUserName(name);
   }, [name]);
 
@@ -84,8 +63,8 @@ export function ProfileEditModal({ show, handleClose, fetchData, name }) {
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
-          <div className="d-flex flex-wrap justify-content-center mb-3">
-            {images.map((e) => (
+          <div className="d-flex flex-wrap justify-content-center mb-3" style={{overflowY:"scroll",maxHeight:"350px"}}>
+            {profiles.map((e) => (
               <Image
                 src={e.imgUrl}
                 roundedCircle

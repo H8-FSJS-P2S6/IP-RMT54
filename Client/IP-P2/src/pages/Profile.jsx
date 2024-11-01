@@ -13,6 +13,7 @@ export function Profile() {
   const [show, setShow] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [favorites, setFavorites] = useState([]);
+  const [profiles,setProfiles] = useState([]) 
 
   const dispatch = useDispatch();
   const pokemonList = useSelector((state) => state.pokemon.list);
@@ -66,6 +67,29 @@ export function Profile() {
       });
     }
   };
+
+  const fetchProfile = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://ip-p2.brandon-hash268.online/profiles",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
+      // console.log(data, "<<<<<");
+
+      setProfiles (data)
+    } catch (error) {
+      errorSound.start();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response.data.message,
+      });
+    }
+  };
   const handleUnfavorited = async (pokemonName) => {
     try {
       releaseSound.start();
@@ -94,6 +118,7 @@ export function Profile() {
   useEffect(() => {
     fetchUser();
     fetchFavorite();
+    fetchProfile()
     dispatch(fetchPokemon());
     // releaseSound.load()
   }, [dispatch]);
@@ -150,6 +175,7 @@ export function Profile() {
                         handleClose={() => setShowEditModal(false)}
                         fetchData={fetchUser}
                         name={user.userName}
+                        profiles={profiles}
                       />
 
                       {user.role == "admin" && (
@@ -171,7 +197,7 @@ export function Profile() {
         </div>
       </section>
       <ImageUploadModal
-        fetchData={fetchUser}
+        fetchProfile={fetchProfile}
         show={show}
         handleClose={handleClose}
         centered
